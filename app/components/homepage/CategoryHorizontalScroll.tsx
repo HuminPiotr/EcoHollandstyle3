@@ -51,6 +51,15 @@ const categories = [
   },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 const CategoryHorizontalScroll = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -107,7 +116,19 @@ const CategoryHorizontalScroll = () => {
   };
 
   return (
-    <section className="py-24 lg:py-36 bg-main overflow-hidden">
+    <section className="pt-12 pb-24 lg:pt-16 lg:pb-24 bg-main overflow-hidden">
+      {/* NAGŁÓWEK */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeUp}
+        className="flex flex-col items-center text-center mb-8 lg:mb-8 shrink-0"
+      >
+        <h2 className="font-heading text-4xl lg:text-5xl text-black">
+          Oferujemy
+        </h2>
+      </motion.div>
       <div className="hidden md:block">
         <div
           ref={scrollContainerRef}
