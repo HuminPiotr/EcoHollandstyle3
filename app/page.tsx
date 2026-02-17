@@ -1,5 +1,6 @@
 import Hero from "@/components/homepage/Hero";
 import WelcomeSection from "@/components/homepage/WelcomeSection";
+import CategoryHorizontalScroll from "@/components/homepage/CategoryHorizontalScroll";
 
 const heroData = {
   title: "Unikalne meble z duszą Holandii",
@@ -17,6 +18,7 @@ export default function Home() {
         ctaLink={heroData.ctaLink}
       />
       <WelcomeSection />
+      <CategoryHorizontalScroll />
     </>
   );
 }
