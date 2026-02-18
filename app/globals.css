@@ -8,6 +8,10 @@
   --color-brown: #522a27;
   --color-accent: #4c3d30;
   --color-gray: #bebdbb;
+  --color-dark-brown: #4b3c30;
+
+  /* Definicja animacji do użycia jako klasa animate-falling-leaf */
+  --animate-falling-leaf: falling-leaf 1s ease-out forwards;
 
   /* FLUID TYPOGRAPHY SCALE */
   /* clamp(min_size, fluid_value, max_size) */
@@ -44,5 +48,17 @@
   h3,
   h4 {
     @apply font-heading font-semibold;
+  }
+}
+
+/* Definicja klatek animacji w standardzie CSS */
+@keyframes falling-leaf {
+  0% {
+    transform: translateY(-10px) rotate(21deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 1;
   }
 }

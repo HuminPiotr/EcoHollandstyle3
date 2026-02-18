@@ -4,6 +4,7 @@ import CategoryHorizontalScroll from "@/components/homepage/CategoryHorizontalSc
 import NewArrivals from "@/components/homepage/NewArrivals";
 import FeaturedMarquee from "@/components/homepage/FeaturedMarquee";
 import SocialGarden from "@/components/homepage/SocialGarden";
+import ContactCTA from "./components/homepage/ContactCTA";
 
 const heroData = {
   title: "Unikalne meble z duszą Holandii",
@@ -25,6 +26,7 @@ export default function Home() {
       <NewArrivals />
       <FeaturedMarquee />
       <SocialGarden />
+      <ContactCTA />
     </>
   );
 }
