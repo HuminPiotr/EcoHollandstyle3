@@ -3,6 +3,7 @@ import WelcomeSection from "@/components/homepage/WelcomeSection";
 import CategoryHorizontalScroll from "@/components/homepage/CategoryHorizontalScroll";
 import NewArrivals from "@/components/homepage/NewArrivals";
 import FeaturedMarquee from "@/components/homepage/FeaturedMarquee";
+import SocialGarden from "@/components/homepage/SocialGarden";
 
 const heroData = {
   title: "Unikalne meble z duszą Holandii",
@@ -23,6 +24,7 @@ export default function Home() {
       <CategoryHorizontalScroll />
       <NewArrivals />
       <FeaturedMarquee />
+      <SocialGarden />
     </>
   );
 }
