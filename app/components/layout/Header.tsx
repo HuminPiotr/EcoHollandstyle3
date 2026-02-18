@@ -22,9 +22,14 @@ const Header = () => {
 
   const pathname = usePathname();
   const isHomePage = pathname === "/";
-  const { totalItems, setIsOpen } = useCart();
 
-  // 1. Inicjalizacja montowania i scrolla
+  // ZMIANA: Używamy openCart zamiast setIsOpen
+  const { items, openCart } = useCart();
+
+  // Obliczamy ilość przedmiotów (dla badge'a)
+  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
+
+  // 1. Inicjalizacja (Hydration Fix)
   useEffect(() => {
     setMounted(true);
     let lastScrollY = window.scrollY;
@@ -37,24 +42,24 @@ const Header = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Sprawdź pozycję natychmiast po załadowaniu
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 2. Zamykanie menu przy zmianie trasy
+  // 2. Zamykanie menu po zmianie trasy
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
-  // Logika wariantu (Mounted zapobiega błędnym kolorom na starcie)
+  // Logika kolorów (bezpieczna dzięki mounted)
   const isOverHero = mounted && isHomePage && !scrolled && !menuOpen;
   const textColorClass = isOverHero ? "text-white" : "text-black";
   const logoVariant = isOverHero ? "white" : "default";
 
   return (
     <>
-      {/* Overlay tła przy otwartym menu */}
+      {/* Overlay tła */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -80,7 +85,7 @@ const Header = () => {
           className={`container mx-auto px-6 lg:px-12 transition-colors duration-500 ${textColorClass}`}
         >
           <div className="flex items-center justify-between h-20 relative">
-            {/* LEWA STRONA: Hamburger + Nav */}
+            {/* LEWA: Menu + Linki */}
             <div className="flex items-center gap-6">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -111,15 +116,15 @@ const Header = () => {
               <Logo variant={logoVariant} />
             </div>
 
-            {/* PRAWA STRONA: Koszyk */}
+            {/* PRAWA: Koszyk (ZMIANA: onClick={openCart}) */}
             <button
-              onClick={() => setIsOpen(true)}
+              onClick={openCart}
               className="p-2 -mr-2 relative hover:opacity-60 transition-opacity cursor-pointer z-50"
               aria-label="Koszyk"
             >
               <ShoppingBag size={22} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brown text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-brown text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-body">
                   {totalItems}
                 </span>
               )}
@@ -127,7 +132,7 @@ const Header = () => {
           </div>
         </div>
 
-        {/* MENU WYSUWANE (DROPDOWN) */}
+        {/* DROPDOWN MENU */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
@@ -139,9 +144,9 @@ const Header = () => {
             >
               <div className="container mx-auto px-6 lg:px-12 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-                  {/* Nawigacja główna */}
+                  {/* Nawigacja */}
                   <div>
-                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-gray mb-6 text-black/40">
+                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">
                       Nawigacja
                     </p>
                     <nav className="flex flex-col gap-4">
@@ -168,7 +173,7 @@ const Header = () => {
 
                   {/* Kategorie */}
                   <div>
-                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-gray mb-6 text-black/40">
+                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">
                       Kategorie
                     </p>
                     <nav className="flex flex-col gap-3">
@@ -184,9 +189,9 @@ const Header = () => {
                     </nav>
                   </div>
 
-                  {/* Kontakt Info */}
+                  {/* Info */}
                   <div className="hidden md:block">
-                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-gray mb-6 text-black/40">
+                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">
                       Kontakt
                     </p>
                     <div className="font-body text-sm space-y-2 text-black/70">
@@ -195,20 +200,20 @@ const Header = () => {
                     </div>
                   </div>
 
-                  {/* Wyszukiwarka */}
+                  {/* Szukaj */}
                   <div>
-                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-gray mb-6 text-black/40">
+                    <p className="font-body text-[10px] uppercase tracking-[0.2em] text-black/40 mb-6">
                       Szukaj
                     </p>
                     <div className="relative">
                       <input
                         type="text"
                         placeholder="Czego szukasz?"
-                        className="w-full bg-transparent border-b border-black/20 pb-2 font-body text-sm focus:outline-none focus:border-brown transition-colors text-black"
+                        className="w-full bg-transparent border-b border-black/20 pb-2 font-body text-sm focus:outline-none focus:border-brown transition-colors text-black placeholder:text-black/30"
                       />
                       <Search
                         size={16}
-                        className="absolute right-0 bottom-3 text-gray"
+                        className="absolute right-0 bottom-3 text-black/40"
                       />
                     </div>
                   </div>

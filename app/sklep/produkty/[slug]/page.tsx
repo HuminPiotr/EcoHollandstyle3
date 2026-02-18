@@ -4,6 +4,8 @@ import ProductGallery from "@/components/product/ProductGallery";
 import ConditionReport from "@/components/product/ConditionReport";
 import { notFound } from "next/navigation";
 
+import AddToCart from "@/components/product/AddToCart";
+
 // Mock danych
 const getProduct = async (slug: string) => {
   await new Promise((resolve) => setTimeout(resolve, 100));
@@ -24,6 +26,7 @@ const getProduct = async (slug: string) => {
         "/images/products/p3.jpg",
       ],
       stockStatus: "instock",
+      stockQuantity: 4,
       condition: {
         status: "Po renowacji",
         dimensions: "78 × 68 × 72 cm",
@@ -55,12 +58,20 @@ export async function generateMetadata({ params }: Props) {
 
 // --- POPRAWKA 3: Komponent strony z await ---
 export default async function ProductPage({ params }: Props) {
-  const { slug } = await params; // Oczekujemy na params
+  const { slug } = await params;
   const product = await getProduct(slug);
 
   if (!product) {
     notFound();
   }
+
+  // Przygotowujemy obiekt produktu dla koszyka (uproszczony)
+  const cartProduct = {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.images[0], // Bierzemy pierwsze zdjęcie do koszyka
+  };
 
   return (
     <main className="bg-main min-h-screen pt-32 pb-20">
@@ -99,7 +110,7 @@ export default async function ProductPage({ params }: Props) {
               {product.description}
             </p>
 
-            {/* Raport Stanu (Komponent) */}
+            {/* Raport Stanu */}
             <ConditionReport
               status={product.condition.status}
               dimensions={product.condition.dimensions}
@@ -107,11 +118,13 @@ export default async function ProductPage({ params }: Props) {
             />
 
             {/* Przyciski Akcji */}
-            <div className="flex flex-col gap-4">
-              <button className="w-full bg-dark-brown text-white py-5 font-body text-xs uppercase tracking-[0.2em] hover:bg-brown transition-colors flex items-center justify-center gap-3 shadow-lg cursor-pointer">
-                <ShoppingBag size={18} />
-                Dodaj do koszyka
-              </button>
+            <div className="flex flex-col gap-4 ">
+              {/* --- ZMIANA: Użycie komponentu klienckiego --- */}
+              <AddToCart
+                product={cartProduct}
+                variant="desktop"
+                maxQuantity={product.stockQuantity}
+              />
 
               <Link
                 href="/kontakt"
@@ -127,9 +140,8 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Sticky Mobile CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray/20 p-4 lg:hidden z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-        <button className="w-full bg-dark-brown text-white py-4 font-body text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-          Do koszyka — {product.price.toLocaleString("pl-PL")} zł
-        </button>
+        {/* --- ZMIANA: Użycie komponentu klienckiego (Mobile) --- */}
+        <AddToCart product={cartProduct} variant="mobile" />
       </div>
     </main>
   );

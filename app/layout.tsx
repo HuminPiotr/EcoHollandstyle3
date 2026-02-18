@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import CartSidebar from "@/components/layout/CartSidebar";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin-ext"],
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="pl" className={`${cormorant.variable} ${lato.variable}`}>
       <body>
         <Header />
+        <CartSidebar />
         <main>{children}</main>
         <Footer />
       </body>
